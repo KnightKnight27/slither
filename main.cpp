@@ -1,32 +1,32 @@
-// library that provides some functions and datatypes for working with time
-#include <chrono> 
-
-#include "constants.h"
 #include "ui.h"
 #include "game.h"
-using namespace std; 
-
+#include <chrono>
 
 void event_loop() {
-    auto last_time = chrono::system_clock::now();
-    auto current_time = chrono::system_clock::now();
-    int delta_t;
-    while(true) {
-        current_time = chrono::system_clock::now();
-        delta_t = chrono::duration_cast<chrono::milliseconds>(
-                      current_time - last_time
-                  ).count(); // count the number of units that have passed
-        if(delta_t > TICK_INTERVAL) {
-            tick();
-            refresh();
-            last_time = current_time;
-        }
-    }
-}
+	auto last_time = chrono::system_clock::now();
+	auto current_time = last_time;
+	int dt;
+	int key;
 
+	while(true) {
+		key = ERR;
+		do {
+			current_time = chrono::system_clock::now();
+			dt = chrono::duration_cast<std::chrono::microseconds>(current_time - last_time).count();
+			int k = getch();
+			if(k != ERR)
+				key = k;
+		} while(dt < 100000);
+		last_time = current_time;
+
+		tick(key);
+		refresh();
+	}
+}
 int main() {
-    init_ui();
-    event_loop();
-    tear_down_ui();
-    return 0;
+	init_ui();
+	event_loop();
+	while(getch() == ERR);  // wait for user input
+	tear_down_ui();
+	return 0;
 }

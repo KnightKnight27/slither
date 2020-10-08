@@ -1,6 +1,15 @@
-#include <ncurses.h>
-#include <iostream>
+#ifndef UI
 
-void print_border();
+#define UI
+
+#include <curses.h>
+#include <iostream>
+#include "constants.h"
+
 void init_ui();
+
 void tear_down_ui();
+
+void paint_border();
+
+#endif
